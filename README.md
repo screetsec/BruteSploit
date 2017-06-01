@@ -1,7 +1,7 @@
 # Brutsploit
 
 
-BruteSploit is a collection of method for automated Generate, Bruteforce and Manipulation wordlist with interactive shell 
+BruteSploit is a collection of method for automated Generate, Bruteforce and Manipulation wordlist with interactive shell.
 That can be used during a penetration test to enumerate and offensive  .  
 
 ### Donate
