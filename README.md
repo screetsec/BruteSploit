@@ -19,7 +19,7 @@ That can be used during a penetration test to enumerate and can be used in CTF f
 
 
 
-### Features & Tutorial
+### Features & Tutorial [ Request submit a new issue ]
 - https://www.youtube.com/watch?v=x51As2OS2z4 
 - Channel : https://www.youtube.com/screetsec
 
