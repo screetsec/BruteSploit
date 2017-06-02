@@ -1,25 +1,26 @@
 # Brutsploit
 
+[![Version](https://img.shields.io/badge/Brutsploit-1.1.0-brightgreen.svg?maxAge=259200)]()
+[![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
+[![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 
 BruteSploit is a collection of method for automated Generate, Bruteforce and Manipulation wordlist with interactive shell.
 That can be used during a penetration test to enumerate and can be used in CTF for manipulation,combine,transform and permutation some words or file text :p 
 
-[![Version](https://img.shields.io/badge/Brutsploit-1.1.0-brightgreen.svg?maxAge=259200)]()
-[![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
-[![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 
 
 <img src="https://cloud.githubusercontent.com/assets/17976841/26713523/583b95aa-4797-11e7-93a5-d67a66726e5c.png" ></img> 
 
 
-### Features 
-
-Check in this video 
-
 ### Donate
 - If this project very help you to penetration testing  and u want support me , you can give me a cup of coffee :)
 - [![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/id/address/1NuNTXo7Aato7XguFkvwYnTAFV2immXmjS)
 
+
+
+### Features 
+
+Check in this video 
 
 ## :scroll: Changelog
 Be sure to check out the [Changelog] and Read CHANGELOG.md
