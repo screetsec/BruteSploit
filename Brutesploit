@@ -1,0 +1,2198 @@
+#!/bin/bash
+
+
+
+VERSION='1.1.1'
+CODENAME='Pretty'
+dir='pwd'
+
+
+#This colour
+cyan='\e[0;36m'
+green='\e[1;32m'
+okegreen='\033[92m'
+lightgreen='\e[1;32m'
+white='\e[1;37m'
+red='\e[1;31m'
+yellow='\e[1;33m'
+BlueF='\e[1;34m'
+
+#Accurate method to detect user Distro
+lnx="Linux"
+lsb_release -i > temp/distro.tmp
+lsb_release -c > temp/codename.tmp
+rlname=`awk '{print $2}' temp/codename.tmp`
+dist=`awk '{print $3}' temp/distro.tmp`
+dist1=`awk '{print $4}' temp/distro.tmp`
+rm -f temp/codename.tmp >/dev/null
+rm -f temp/distro.tmp >/dev/null
+if [ "$dist" == "$lnx" ];
+then
+dist0=$dist1
+else
+dist0=$dist
+fi
+OS=`uname` #
+distro=$dist0
+disrov=$rlname
+
+
+cont () {
+# check medusa
+      which /usr/bin/medusa > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+      echo -e $okegreen [✔]::[Medusa: Installation found!;
+else
+   echo -e $red [x]::[warning]:this script require medusa installed to work ;
+   echo ""
+   echo -e $red [!]::Please Install medusa to work ;
+   sleep 0.5
+   exit 1
+ fi
+sleep 0.5
+
+
+# check crunch
+      which tools/crunch-3.6/crunch > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+      echo -e $okegreen [✔]::[Crunch]: Installation found!;
+
+else
+
+   echo -e $red [x]::[warning]:this script require crunch installed to work ;
+   echo ""
+   echo -e $red [!]::check the folder tools crunch ;
+   echo ""
+   sleep 0.5
+   exit 1
+fi
+sleep 0.5
+
+# check cewl
+      which /usr/bin/cewl > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+      echo -e $okegreen [✔]::[Cewl]: Installation found!;
+
+else
+
+   echo -e $red [x]::[warning]:this script require cewl installed to work ;
+   echo ""
+   echo -e $red [!]::Please install cewl to work ;
+   echo ""
+   sleep 0.5
+   exit 1
+fi
+sleep 0.5
+
+# check fcrackzip
+      which /usr/bin/fcrackzip > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+      echo -e $okegreen [✔]::[fcrackzip]: Installation found!;
+else
+
+   echo -e $red [x]::[warning]:this script require fcrackzip installed to work ;
+   echo ""
+   echo -e $red [!]::Please install fcrackzip to work properly ;
+   echo ""
+   sleep 0.5
+   exit 1
+fi
+sleep 0.5
+
+# check dirsearch
+      which tools/dirsearch/dirsearch.py > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+      echo -e $okegreen [✔]::[dirsearch]: Installation found!;
+else
+
+   echo -e $red [x]::[warning]:this script require dirsearch installed to work ;
+   echo ""
+   echo -e $red [!]::Please install dirsearch to work properly ;
+   echo ""
+   sleep 0.5
+   exit 1
+fi
+sleep 0.5
+
+}
+
+
+function chknet() {
+echo -e $red "[X] Your Internet is not working correctly!"
+sleep 0.5
+echo -e $okegreen "[*] Checking ...."
+ping -c 1 8.8.4.4 > /dev/null 2>&1
+png="$?"
+ if [ $png == "0" ]
+then
+    echo -e $red "[X] Your linux OS is not able to resolve"
+    echo -e $red "hostnames over terminal using ping !!"
+    echo ""
+    echo -e $yellow "Search on the web : (unable to resolve hostnames ping) to find a solution"
+echo ""
+echo -e $okegreen "BrutSploit will continue , but some of its functions may not work properly."
+echo ""
+echo -e $okegreen "Press [ENTER] key to continue"
+read continue
+cont
+    sleep 0.5
+elif [ $png == "1" ]
+then
+    echo -e $yellow "You are connected to your local network but not to the web ."
+    echo -e $yellow "Check if your router/modem gateway is connected to the web ."
+echo ""
+echo -e $okegreen "BrutSploit will continue , but some of its functions may not work properly."
+echo ""
+echo -e $okegreen "Press [ENTER] key to continue"
+read continue
+cont
+sleep 0.5
+elif [ $png == "2" ]
+then
+echo -e $red "You are not connected to any network ."
+echo ""
+echo -e $okegreen "BrutSploit will continue , but many of its functions will not work properly."
+echo ""
+echo -e $okegreen "Press [ENTER] key to continue"
+read continue
+cont
+    sleep 0.5
+fi
+}
+
+#########################
+#CHECK DEPENDICIES
+#########################
+clear
+echo -e $red"   _____         _       _____     _     _ _    "
+echo "  | __  |___ _ _| |_ ___|   __|___| |___|_| |_ "
+echo "  | __ -|  _| | |  _| -_|__   | - | | - | |  _| "
+echo "  |_____|_| |___|_| |___|_____|  _|_|___|_|_| "
+echo "                              |_|             "
+echo -e $lightgreen'-- -- +=[(c) 2017-2018 | dracos-linux.org | Kali.org | Hacker Indonesia '
+echo -e $cyan'-- -- +=[ Author: Screetsec < Edo Maland >  ]=+ -- -- '
+echo -e " "
+
+if [ $(id -u) != "0" ]; then
+
+      echo -e $red [!]::[Check Dependencies] ;
+      sleep 0.5
+      echo -e $red [✔]::[Check User]: $USER ;
+      echo -e $red [✔]::[Distro]: $distro ;
+      echo -e $red [✔]::[Release]: $rlname ;
+      sleep 0.5
+      echo -e $red [x]::[not root]: you need to be [root] to run this script.;
+      echo ""
+   	  sleep 1
+	  exit
+
+
+else
+
+   echo -e $okegreen [!]::[Check Dependencies]: ;
+   sleep 0.5
+   echo -e $okegreen [✔]::[Distro]: $distro ;
+   echo -e $okegreen [✔]::[Release]: $rlname ;
+   echo -e $okegreen [✔]::[Check User]: $USER ;
+
+sleep 0.5
+fi
+
+#Checking if user is using a local terminal or a remote shell
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  echo -e $red [✔]::[Terminal]: remote ;
+echo ""
+    echo -e $red "BrutSploit & Setup does not work over a remote secure shell ."
+    echo ""
+echo -e $green "If you want to Install BrutSploit on a remote computer then "
+echo -e $green "use a remote desktop connection like (rdesktop) or (vnc) "
+echo ""
+echo -e $green "Press [ENTER] key to exit"
+read abor
+exit 1
+else
+sleep 0.5
+echo -e $okegreen [✔]::[Terminal]: local ;
+  case $(ps -o comm= -p $PPID) in
+    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+  esac
+fi
+
+sleep 0.5
+#Checking internet connection by pinging hostname or ip dns (google)
+ ping -c 1 google.com > /dev/null 2>&1
+png="$?"
+ if [ $png == "0" ]
+then
+    echo -e $okegreen [✔]::[Internet Connection]: CONNECTED!;
+    sleep 0.5
+    cont
+elif [ $png == "1" ]
+then
+    echo -e $yellow [✔]::[Internet Connection]: LOCAL ONLY!;
+    chknet
+elif [ $png == "2" ]
+then
+echo -e $red [✔]::[Internet Connection]: OFFLINE!;
+chknet
+fi
+
+
+
+f_un_ban (){
+clear
+echo
+
+echo -e $green"   _____         _       _____     _     _ _    "
+echo "  | __  |___ _ _| |_ ___|   __|___| |___|_| |_ "
+echo "  | __ -|  _| | |  _| -_|__   | - | | - | |  _| "
+echo "  |_____|_| |___|_| |___|_____|  _|_|___|_|_| "
+echo "                              |_|             "
+echo -e "\t "$green"¦"
+echo -e "\t "$green"¦----"$red"►  "$white" Bruteforce & Wordlist Sploit Framework $green[Keys]    "
+echo -e "\t "$green"¦----"$red"►  "$white" Codename "$green": "$red"$CODENAME   "
+echo -e "\t "$green"¦----"$red"►  "$white" Version  "$green": "$red"$VERSION  "
+echo -e "\t "$green"¦----"$red"►  "$white" Modules  "$green": "$red"21 "$green"Modules  "
+echo -e "\t "$green"¦----"$red"►  "$white" Github   "$green": "$BlueF"www.github.com/screetsec  \n\n"
+}
+
+
+fu_un_help () {
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦––––"$red"►"$green" help         "$red": "$white"For show this message"
+	echo -e "\t"$green"¦––––"$red"►"$green" show modules "$red": "$white"show all modules from this tools"
+	echo -e "\t"$green"¦––––"$red"►"$green" use modules  "$red": "$white"use a module, ex : use [ID] "
+	echo -e "\t"$green"¦––––"$red"►"$green" list modules "$red": "$white"list a module, ex : list [ID] "
+	echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+	echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+	echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+	echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+	echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+	echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+	echo -e "\t"$green"¦––––"$red"►"$green" credits      "$red": "$white"show credits "
+	echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+
+}
+
+
+
+fu_un_module () {
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦"$white"        ID      NAME MODULES	      VALUE"
+	echo -e "\t"$green"¦"$red"       ----  ------------------    ---------"
+		echo -e ""$green"\t¦"
+	echo -e "\t"$green"¦––––$red► "$green" [0a]  wordlist/transform   : 7 Modules "
+	echo -e "\t"$green"¦––––$red► "$green" [0b]  wordlist/combine     : 2 Modules  "
+	echo -e "\t"$green"¦––––$red► "$green" [0c]  wordlist/permutation : 2 Modules  "
+	echo -e "\t"$green"¦––––$red► "$green" [0d]  wordlist/setup       : 6 Modules "
+	echo -e "\t"$green"¦––––$red► "$green" [0e]  wordlist/attack      : 4 Modules \n\n"
+}
+
+fu_un_list_combination () { #list combination
+	echo -e "\t"$green"¦ "
+	echo -e "\t"$green"¦$red Module From Wordlist/combine  "
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦––––$red►"$green" [0b1] $white case/multi_word_list  "
+	echo -e "\t"$green"¦––––$red►"$green" [0b2] $white case/all_words_list \n\n"
+
+}
+
+fu_un_list_setup () {
+	echo -e "\t"$green"¦ "
+	echo -e "\t"$green"¦$red Module From Wordlist/setup  "
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦––––$red►"$green" [0d1] $white wordlist/create/date_list  "
+	echo -e "\t"$green"¦––––$red►"$green" [0d2] $white wordlist/create/profil  "
+	echo -e "\t"$green"¦––––$red►"$green" [0d3] $white wordlist/create/phone/10digit "
+	echo -e "\t"$green"¦––––$red►"$green" [0d4] $white wordlist/create/phone/11digit "
+	echo -e "\t"$green"¦––––$red►"$green" [0d5] $white wordlist/create/phone/ID/12digit "
+	echo -e "\t"$green"¦––––$red►"$green" [0d6] $white wordlist/create/from_website"
+}
+
+
+fu_un_list_attack () {
+	echo -e "\t"$green"¦ "
+	echo -e "\t"$green"¦$red Module From Wordlist/attack  "
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦––––$red►"$green" [0e1] $white service/attack/all_in_one  "
+	echo -e "\t"$green"¦––––$red►"$green" [0e2] $white bruteforce/zip/attack  "
+	echo -e "\t"$green"¦––––$red►"$green" [0e3] $white bruteforce/dirsearch/attack   "
+	echo -e "\t"$green"¦––––$red►"$green" [0e4] $white bruteforce/instagram/attack   "
+
+}
+fu_un_list_permutation () { #list permutation
+	echo -e "\t"$green"¦ "
+	echo -e "\t"$green"¦$red Module From Wordlist/permutation  "
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦––––$red►"$green" [0c1] $white wordlist/permutation/basic_leetify  "
+	echo -e "\t"$green"¦––––$red►"$green" [0c2] $white case/all_words_list \n\n"
+
+}
+
+fu_un_list_transfrom () { #list transfrom
+	echo -e "\t"$green"¦ "
+	echo -e "\t"$green"¦$red Module From Wordlist/transform  "
+	echo -e "\t"$green"¦"
+	echo -e "\t"$green"¦––––$red►"$green" [0a1]  "$green$white"case/low_to_upp   "
+	echo -e "\t"$green"¦––––$red►"$green" [0a2]  "$green$white"case/upp_to_low"
+	echo -e "\t"$green"¦––––$red►"$green" [0a3]  "$green$white"case/first_letter_upp"
+	echo -e "\t"$green"¦––––$red►"$green" [0a4]  "$green$white"case/first_letter_low " #sed -r 's/\<./\L&/g'
+	echo -e "\t"$green"¦––––$red►"$green" [0a5]  "$green$white"case/remove_all_digit "  #tr -d '[:digit:]' < a > c
+	echo -e "\t"$green"¦––––$red►"$green" [0a6]  "$green$white"case/remove_all_char " #tr -cd '[:digit:]' < a > b
+	echo -e "\t"$green"¦––––$red►"$green" [0a7]  "$green$white"case/remove_spef_char\n" # tr -d 't'
+
+}
+
+
+fu_un_info_transform () { #show info_transform
+
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦ Information"
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦––––$red►"$green" Transform your wordlist  "
+		echo -e "\t"$green"¦––––$red►"$green" Combine words from 1 list"
+		echo -e "\t"$green"¦––––$red►"$green" Combine all wordlists in a directory to 1 wordlist \n\n"
+}
+
+fu_un_info_combination () { #show info combination
+
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦ Information"
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦––––$red►"$green" Combination your wordlist  "
+		echo -e "\t"$green"¦––––$red►"$green" Combine words from one wordlist to all words"
+		echo -e "\t"$green"¦––––$red►"$green" Combine all Wordlist into one fle \n\n"
+}
+
+
+
+fu_un_info_permutation () { #
+
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦ Information"
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦––––$red►"$green" Transform your wordlist  "
+		echo -e "\t"$green"¦––––$red►"$green" Permutation "
+		echo -e "\t"$green"¦––––$red►"$green" change a spesic character into spesial char \n\n"
+}
+
+
+fu_un_info_setup () { #
+
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦ Information"
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦––––$red►"$green" Setup your wordlist  "
+		echo -e "\t"$green"¦––––$red►"$green" Create a spesific wordlist for attack \n\n"
+}
+
+
+fu_un_info_attack () { #
+
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦ Information"
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦––––$red►"$green" Attack service   "
+		echo -e "\t"$green"¦––––$red►"$green" Bruteforce for attack \n\n"
+}
+
+fu_un_info () {
+	f_un_ban
+	echo -e " Wordlist Information : $word\n"
+	echo -e "\t Location: $infolist "
+	echo -e "\t Languange: $lang "
+	echo -e "\t Rating: $rating"
+	echo -e "\t Description:$desc\n\n"
+	echo -e " Required Options :\n"
+	echo -e "\t Services:"
+	echo -e "\t Lhost: $host"
+	echo -e "\t Lport: $port"
+	echo -e
+
+
+}
+
+f_un_info_credits () { #
+
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦ Credits - Special Thanks to Allah "
+		echo -e "\t"$green"¦"
+		echo -e "\t"$green"¦––––$red►"$green" Dracos Linux ( www.dracos-linux.org )  "
+  	echo -e "\t"$green"¦––––$red►"$green" Backbox indonesia ( www.www.backboxindonesia.or.id )  "
+		echo -e "\t"$green"¦––––$red►"$green" Offensive Security for the awesome OS"
+		echo -e "\t"$green"¦––––$red►"$green" Kali Linux ( http://www.kali.org/ )  "
+		echo -e "\t"$green"¦––––$red►"$green" http://www.kitploit.com/"
+		echo -e "\t"$green"¦––––$red►"$green" Big Thanks to : http://www.github.com/ \n\n"
+}
+
+
+#Jangan Nakal CTRL C MULU
+
+trap ctrl_c INT
+ctrl_c() {
+clear
+echo -e $red"[*] (Ctrl + C ) Detected, Trying To Exit ..."
+sleep 1
+echo ""
+echo -e $red"[*] Stop all service , Wait  ..."
+sleep 1
+echo ""
+echo -e $yellow"[*] Thank You For Using Brutsploit  =)."
+echo ""
+echo -e $yellow"[*] Check Dracos Linux LFS, Penetration OS From Indonesia  =P."
+exit
+}
+
+
+
+fu_un_exit () {
+clear
+sleep 1
+echo -e $yellow"[*] Thank You For Using Brutsploit  =)."
+echo ""
+sleep 1
+echo -e $red"[*] Follow me in Github ."
+echo ""
+sleep 1
+echo -e $okeegreen"[*] www.github.com/screetsec ."
+echo ""
+sleep 1
+echo -e $yellow"[*] Check Dracos Linux LFS, Penetration OS From Indonesia  =P."
+exit
+}
+
+
+fu_un_set_0x1 () {
+	clear
+	f_un_ban && f_un_des
+	echo -e " Available list:\n\n"
+        echo -e "\t {0x1} abjad_1.lst | Size : 23.8 mb"
+        echo -e "\t {0x2} abjad_2.lst | Size : 10.4 mb"
+        echo -e "\t {0x3} abjad_3.lst | Size : 16.5 mb"
+        echo -e "\t {0x4} abjad_4.lst | Size : 5.0  mb  "
+        echo -e "\t {0x5} abjad_5.lst | Size : 19.5 mb\n"
+        read -p "choice: " mainchoice
+        case $mainchoice in
+	0x1) path=`pwd`
+       infolist=$path/wlist/abjad/abjad_1.lst
+	     lang='English'
+	     rating='8.5'
+	     desc='random'
+	     echo -ne " \n\tset up wordlist complete " ; read p  && fu_un_set_0x1 ;;
+	0x2) path=`pwd`
+             infolist=$path/wlist/abjad/abjad_2.lst
+	     lang='English'
+	     rating='8.2'
+	     desc='random'
+	     echo -ne " \n\tset up wordlist complete " ; read p  && fu_un_set_0x1 ;;
+	0x3) path=`pwd`
+             infolist=$path/wlist/abjad/abjad_3.lst
+	     lang='English'
+	     rating='8.5'
+	     desc='random'
+	     echo -ne " \n\tset up wordlist complete " ; read p  && fu_un_set_0x1 ;;
+	0x4) path=`pwd`
+             infolist=$path/wlist/abjad/abjad_4.lst
+	     lang='English'
+	     rating='8.3'
+	     desc='random'
+	     echo -ne " \n\tset up wordlist complete " ; read p  && fu_un_set_0x1 ;;
+	0x5) path=`pwd`
+             infolist=$path/wlist/abjad/abjad_5.lst
+	     lang='English'
+	     rating='8.2'
+	     desc='random'
+	     echo -ne " \n\tset up wordlist complete " ; read p  && fu_un_set_0x1 ;;
+
+	*)
+			 read -rsp $'\nFor Use : set {number/exmaple:0x1}' -n 1 key
+			 fu_un_set_0x1 ;;
+	esac
+}
+
+
+fu_un_set_0x8 () {
+	     echo -ne "\n     locate your file wordlist {/root/mylist/kill.lst:"
+	     read infolist
+             lang='-'
+	     rating='-'
+	     desc='random'
+	     echo -ne " \n     set up wordlist complete " ; read p  && fu_un_show_wlist
+}
+fu_un_show_wlist () {
+				clear
+        f_un_ban && f_un_des
+				echo -e " Available list:\n\n"
+        echo -e "\t {0x1} Abjad {random name} "
+        echo -e "\t {0x2} Daerah {Bahasa daerah}"
+        echo -e "\t {0x3} Date {date}"
+        echo -e "\t {0x4} Indonesia {Lit Worlist Indonesia}"
+        echo -e "\t {0x5} Number {6 digit pin}"
+				echo -e "\t {0x6} Porn {Indonesia}"
+				echo -e "\t {0x7} Password Default"
+				echo -e "\t {0x8} Using your wordlist\n"
+        read -p "set: " mainset
+        case $mainset in
+        set\ 0x1) clear && fu_un_set_0x1 ;;
+        help|Help) clear=; fu_un_help ;;
+        oke) clean=; f_csharplocal ;;
+        info|Info) clean=; fu_un_info ;;
+        5) clean=; f_ghostasm ;;
+        6) clean=; f_encryptionoptions ;;
+        7) f_checkexit ;;
+        set\ 0x8) fu_un_set_0x8 ;;
+        Q|q) f_Quit ;;
+        *) mainmenu ;;
+        esac
+}
+
+
+
+
+
+
+
+
+
+
+
+
+fu_un_transform_1 ()
+{
+	file="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/low_to_upp$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string lower to upper case"
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+					else
+					tr '[:lower:]' '[:upper:]' < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+					fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+fu_un_transform_2 ()
+{
+	file="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/upp_to_low$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string upper to lower case  "
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+			then
+				if [[ $file == "none" ]] || [[ $_name == "none" ]]
+				then
+				echo -e "\t"$green"¦"
+				echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+					else
+					tr '[:upper:]' '[:lower:]' < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+				fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+fu_un_transform_3 ()
+{
+	file="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/first_letter_upp$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string, first letter to upper"
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+					else
+					sed -r 's/\<./\U&/g' < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+				  fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+
+fu_un_transform_4 ()
+{
+	file="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/first_letter_low$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string , first letter to lower"
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+					else
+					sed -r 's/\<./\L&/g' < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+				  fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+
+fu_un_transform_5 ()
+{
+	file="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/remove_all_digit$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"remove all digit from wordlist"
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+					else
+					tr -d '[:digit:]' < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+				  fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+
+fu_un_transform_6 ()
+{
+	file="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/remove_all_char$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"remove all characters on wordlist"
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+				else
+					tr -cd '[:digit:]' < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+				  fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+
+
+fu_un_transform_7 ()
+{
+	file="none"
+	_name="none"
+	char="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/transform/case/remove_spef_char$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example            value "
+					echo -e "\t "$red"-------       -------            -----"
+					echo ""
+					echo -e $green"\t charact      "$cyan" /path/your.lst     $char"
+					echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+					echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"remove spesific character on your wordlist "
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+					elif [[ $case2 == "charact" ]] && [[ ! $case3 == "" ]]
+				then
+								char=$case3
+			 		fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+				else
+					tr -d "'$char'" < $file > "output/$_name"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"convert a string done file on output folder \n"
+				  fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+
+
+fu_un_combine_1 ()
+{
+	file1="none"
+	file2="none"
+	_name="none"
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/combine/case/multi_word_list$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo
+					echo -e "\t "$white"options       example             value "
+					echo -e "\t "$red"-------       -------             -----"
+					echo ""
+					echo -e $green"\t file1       "$cyan" /path/file1.lst     $file1"
+					echo -e $green"\t file2       "$cyan" /path/file2.lst     $file2"
+					echo -e $green"\t outfile     "$cyan" output.txt          $_name"
+					echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"combine a word from wordlist1 and 2 to one file "
+			elif [[ $case1 == "set" ]]
+				then
+					if [[ $case2 == "file1" ]] 	&& [[ ! $case3 == "" ]]
+				then
+								file1=$case3
+			    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+				then
+			          _name=$case3
+					elif [[ $case2 == "file2" ]] && [[ ! $case3 == "" ]]
+				then
+								file2=$case3
+					fi
+		 	elif [[ $case1 == "run" ]]
+				then
+					if [[ $file1 == "none" ]] || [[ file2 == "none" ]] || [[ $_name == "none" ]]
+					then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+				else
+					awk > output/$_name 'NR == FNR {
+  				l2[FNR] = $0
+  				fnr = FNR; next
+  				}
+					{
+  				for (i = 0; ++i <= fnr;)
+    			print $0 l2[i]
+				}' $file1 $file2
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"combine a list done file on output folder \n"
+				  fi
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+	fu_un_combine_2 ()
+	{
+		file1="none"
+		file2="none"
+		_name="none"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"wordlist/combine/case/all_words_list$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+						echo
+						echo -e "\t "$white"options       example             value "
+						echo -e "\t "$red"-------       -------             -----"
+						echo ""
+						echo -e $green"\t file1       "$cyan" /path/file1.lst     $file1"
+						echo -e $green"\t file2       "$cyan" /path/file2.lst     $file2"
+						echo -e $green"\t outfile     "$cyan" output.txt          $_name"
+						echo
+				elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+				 then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦$red Information"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––$red► "$green"Combine all wordlist into one file "
+				elif [[ $case1 == "set" ]]
+					then
+						if [[ $case2 == "file1" ]] 	&& [[ ! $case3 == "" ]]
+					then
+									file1=$case3
+				    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+					then
+				          _name=$case3
+						elif [[ $case2 == "file2" ]] && [[ ! $case3 == "" ]]
+					then
+									file2=$case3
+						fi
+					elif [[ $case1 == "run" ]]
+						then
+						if [[ $file1 == "none" ]] || [[ file2 == "none" ]] || [[ $_name == "none" ]]
+						then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+						else
+						cat $file1 $file2 > output/$_name
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––$red► "$green"combine a list done file on output folder \n"
+					  fi
+				elif [[ $case1 == "clear" ]] ; then
+									clear
+					elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+						then
+									break
+						else
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+				  		fi
+		done
+		}
+
+
+fu_un_permut_1 ()
+{
+	perm='tools/perm'
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/permutation/basic_leetify$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"this module dont need require any options"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"Spesific character for Permutation "
+		 	elif [[ $case1 == "run" ]]
+				then
+					chmod +x $perm
+					xterm -T " Brutsploit-Permutation " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -e $perm
+					sleep 2
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+	fu_un_permut_2 ()
+	{
+		file="none"
+		_name="none"
+		perm='tools/perm'
+		babi='tools/all_leet.pl'
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"wordlist/permutation/all_possible_permut$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options       example            value "
+							echo -e "\t "$red"-------       -------            -----"
+							echo ""
+							echo -e $green"\t infile       "$cyan" /path/your.lst     $file"
+							echo -e $green"\t outfile      "$cyan" output.txt         $_name"
+							echo
+					elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Create all possible permutations and leetify wordlist \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "infile" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										file=$case3
+					    elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+						then
+					          _name=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $file == "none" ]] || [[ $_name == "none" ]]
+							then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+						else
+							perl $babi $file > "output/$_name"
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+
+fu_un_setup_1 ()
+	{
+		ab="none"
+		bc="none"
+		cds="none"
+		de="none"
+		tailu="tools/datelist"
+		_name="none"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"wordlist/setup/date_list$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options       example        value "
+							echo -e "\t "$red"-------       -------        -----"
+							echo ""
+							echo -e $green"\t begin       "$cyan" 1900-01-01      $ab"
+							echo -e $green"\t end         "$cyan" 2050-12-31      $bc"
+							echo -e $green"\t formate     "$cyan" ddmmyyyy        $cds"
+							echo -e $green"\t spacing     "$cyan" - , . , /       $de"
+							echo -e $green"\t outfile     "$cyan" output.txt      $_name"
+							echo
+							echo -e $red "\t Available Formate : "$white"ddmmyy / yymmdd / ddmmyyyy\n   \t\t\t     mmddyy / mmddyyyy /  yyyymmdd \n"
+					elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Create wordlist use datelist from tape  \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "begin" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										ab=$case3
+					    elif [[ $case2 == "end" ]] && [[ ! $case3 == "" ]]
+						then
+					          bc=$case3
+							elif [[ $case2 == "formate" ]] && [[ ! $case3 == "" ]]
+						then
+										cds=$case3
+							elif [[ $case2 == "spacing" ]] && [[ ! $case3 == "" ]]
+						then
+										de=$case3
+							elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+						then
+										_name=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_name == "none" ]] || [[ $ab == "none" ]] || [[ $bc == "none" ]] || [[ $cds == "none" ]] || [[ $de == "none" ]]
+							then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -e $tailu -b $ab -e $bc -f $cds -o "output/$_name" -s $de
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+
+
+fu_un_setup_2 ()
+{
+	sperm='tools/cupp.py -i'
+	while /bin/true
+		do
+					echo -e $green"   |"
+					echo -e $green"   └["$BlueF"wordlist/setup/profiling$green]:"
+					echo -e $green"    |"
+					echo -ne $green"    └─► " ; tput sgr0
+					read case1 case2 case3 case4
+		if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+				then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+					echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+					echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+					echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+					echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+					echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+					echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+		elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+			then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"this module dont need require any options"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+			 then
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦$red Information"
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green"Common User Passwords Profiler"
+		 	elif [[ $case1 == "run" ]]
+				then
+					rm *.cupp > /dev/null 2>&1
+					xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -e  python $sperm
+					sleep 2
+					mv *.cupp output
+					echo -e "\t"$green"¦"
+					echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+			elif [[ $case1 == "clear" ]] ; then
+								clear
+				elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+					then
+								break
+					else
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+			  		fi
+	done
+	}
+
+fu_un_setup_3 ()
+	{
+		area="none"
+		crc="./tools/crunch-3.6/crunch"
+		_name="none"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"wordlist/setup/phone/10_digit$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options       example        value "
+							echo -e "\t "$red"-------       -------        -----"
+							echo ""
+							echo -e $green"\t areacode    "$cyan" 904(3digit)     $area"
+							echo -e $green"\t outfile     "$cyan" output.lst      $_name"
+							echo
+					elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Create wordlist 10 digit phone number  \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "areacode" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										area=$case3
+							elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+						then
+										_name=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_name == "none" ]] || [[ $area == "none" ]]
+							then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white  -fa monaco -fs 9 -geometry 110x16-0+0 -e $crc 10 10 0123456789 -t $area%%%%%%% -o "output/$_name"
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+fu_un_setup_4 ()
+		{
+			area="none"
+   		crc="./tools/crunch-3.6/crunch"
+			_name="none"
+					while /bin/true
+						do
+									echo -e $green"   |"
+									echo -e $green"   └["$BlueF"wordlist/setup/phone/11_digit$green]:"
+									echo -e $green"    |"
+									echo -ne $green"    └─► " ; tput sgr0
+									read case1 case2 case3 case4
+						if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+								then
+									echo -e "\t"$green"¦"
+									echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+									echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+									echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+									echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+									echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+									echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+									echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+						elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+							then
+										echo
+										echo -e "\t "$white"options       example        value "
+										echo -e "\t "$red"-------       -------        -----"
+										echo ""
+										echo -e $green"\t areacode    "$cyan" 904(3 digit)    $area"
+										echo -e $green"\t outfile     "$cyan" output.lst      $_name"
+										echo
+								elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+								 then
+										echo -e "\t"$green"¦"
+										echo -e "\t"$green"¦$red Information"
+										echo -e "\t"$green"¦"
+										echo -e "\t"$green"¦––––$red► "$green" Create wordlist 11 digit phone number  \n"
+								elif [[ $case1 == "set" ]]
+									then
+										if [[ $case2 == "areacode" ]] 	&& [[ ! $case3 == "" ]]
+									then
+													area=$case3
+										elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+									then
+													_name=$case3
+								 		fi
+							 	elif [[ $case1 == "run" ]]
+									then
+										if [[ $_name == "none" ]] || [[ $area == "none" ]]
+										then
+										echo -e "\t"$green"¦"
+										echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+										else
+										xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -e $crc 11 11 0123456789 -t $area%%%%%%%% -o "output/$_name"
+										sleep 1
+										echo -e "\t"$green"¦"
+										echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+									  fi
+								elif [[ $case1 == "clear" ]] ; then
+													clear
+									elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+										then
+													break
+										else
+											echo -e "\t"$green"¦"
+											echo -e "\t"$green"¦"
+											echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+								  		fi
+						done
+						}
+
+fu_un_setup_5 ()
+								{
+									area="none"
+						   		crc="./tools/crunch-3.6/crunch"
+									_name="none"
+											while /bin/true
+												do
+															echo -e $green"   |"
+															echo -e $green"   └["$BlueF"wordlist/setup/phone/ID/12_digit$green]:"
+															echo -e $green"    |"
+															echo -ne $green"    └─► " ; tput sgr0
+															read case1 case2 case3 case4
+												if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+														then
+															echo -e "\t"$green"¦"
+															echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+															echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+															echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+															echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+															echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+															echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+															echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+												elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+													then
+																echo
+																echo -e "\t "$white"options       example        value "
+																echo -e "\t "$red"-------       -------        -----"
+																echo ""
+																echo -e $green"\t areacode    "$cyan" 0853(4 digit)   $area"
+																echo -e $green"\t outfile     "$cyan" output.lst      $_name"
+																echo
+														elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+														 then
+																echo -e "\t"$green"¦"
+																echo -e "\t"$green"¦$red Information"
+																echo -e "\t"$green"¦"
+																echo -e "\t"$green"¦––––$red► "$green" Create wordlist 12 digit phone number  \n"
+														elif [[ $case1 == "set" ]]
+															then
+																if [[ $case2 == "areacode" ]] 	&& [[ ! $case3 == "" ]]
+															then
+																			area=$case3
+																elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+															then
+																			_name=$case3
+														 		fi
+													 	elif [[ $case1 == "run" ]]
+															then
+																if [[ $_name == "none" ]] || [[ $area == "none" ]]
+																then
+																echo -e "\t"$green"¦"
+																echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+																else
+																xterm -T " Brutsploit " -bg black -fg white  -fa monaco -fs 9 -geometry 110x16-0+0 -e $crc 12 12 0123456789 -t $area%%%%%%%%% -o "output/$_name"
+																sleep 1
+																echo -e "\t"$green"¦"
+																echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+															  fi
+														elif [[ $case1 == "clear" ]] ; then
+																			clear
+															elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+																then
+																			break
+																else
+																	echo -e "\t"$green"¦"
+																	echo -e "\t"$green"¦"
+																	echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+														  		fi
+												done
+												}
+
+
+fu_un_setup_6 ()
+	{
+		_site="none"
+		_name="none"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"wordlist/setup/from_website$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options       example                value "
+							echo -e "\t "$red"-------       -------                -----"
+							echo ""
+							echo -e $green"\t site        "$cyan" http://docs.kali.org     $_site"
+							echo -e $green"\t outfile     "$cyan" output.lst               $_name"
+							echo
+					elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Create wordlist from website  \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "site" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										_site=$case3
+							elif [[ $case2 == "outfile" ]] && [[ ! $case3 == "" ]]
+						then
+										_name=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_name == "none" ]] || [[ $area == "none" ]]
+							then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -e cewl -w "output/$_name" $_site
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" all done file on output folder \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+
+
+fu_un_attack_1 ()
+	{
+		_hosts="none"
+		_user="none"
+		_pass="none"
+		_service="none"
+		_medusa="/usr/bin/medusa"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"service/attack/all_in_one$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options       example            value "
+							echo -e "\t "$red"-------       -------            -----"
+							echo ""
+							echo -e $green"\t hosts       "$cyan" 192.168.1.1          $_hosts"
+							echo -e $green"\t user        "$cyan" admin/root           $_user"
+							echo -e $green"\t pass        "$cyan" pass.lst             $_pass"
+							echo -e $green"\t service     "$cyan" ftp                  $_service"
+							echo
+							echo -e $red "\t Available Service Module : "$white"cvs / ftp / http / imap / mssql\n  \t\t\t     mysql / nntp / pcanywhere / pop3 / postgres\n   \t\t\t     rdp / rexec / rlogin / rsh / smbnt\n   \t\t\t     smtp / smtp-vrfy / snmp / ssh / svn\n   \t\t\t     telnet / vmauthd / vnc / web-form / wrapper\n   "
+					elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Bruteforce attack service  \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "hosts" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										_hosts=$case3
+					    elif [[ $case2 == "user" ]] && [[ ! $case3 == "" ]]
+						then
+					          _user=$case3
+							elif [[ $case2 == "pass" ]] && [[ ! $case3 == "" ]]
+						then
+										_pass=$case3
+							elif [[ $case2 == "service" ]] && [[ ! $case3 == "" ]]
+						then
+										_service=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_hosts == "none" ]] || [[ $_user == "none" ]] || [[ $_pass == "none" ]] || [[ $_service == "none" ]]
+							then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -e $_medusa -h $_hosts -u $_user -P $_pass -M $_service &
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Complete \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+
+fu_un_attack_2 ()
+	{
+		_file="none"
+		_pass="none"
+		_crack="/usr/bin/fcrackzip"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"bruteforce/zip/attack$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options       example            value "
+							echo -e "\t "$red"-------       -------            -----"
+							echo ""
+							echo -e $green"\t file       "$cyan" okepsex.zip           $_file"
+							echo -e $green"\t pass        "$cyan" pass.lst             $_pass"
+							echo
+					elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Bruteforce zip file attack \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "hosts" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										_file=$case3
+							elif [[ $case2 == "pass" ]] && [[ ! $case3 == "" ]]
+						then
+										_pass=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_file == "none" ]] || [[ $_pass == "none" ]]
+							then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -hold -e $_crack -v -u -D -p $_pass $_file  &
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Complete and Wait :p \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+fu_un_attack_3 ()
+	{
+		_hosts="none"
+    _ex="none"
+		_dir="tools/dirsearch/dirsearch.py"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"bruteforce/dirsearch/attack$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options           example           value "
+							echo -e "\t "$red"-------           -------           -----"
+							echo ""
+							echo -e $green"\t target           "$cyan" www.sex.com       $_hosts"
+							echo -e $green"\t extension        "$cyan" php,asp           $_ex"
+							echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" dirsearch is a simple command line tool designed to brute force directories and files in websites.  \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "target" ]] 	&& [[ ! $case3 == "" ]]
+						then
+										_hosts=$case3
+					    elif [[ $case2 == "extension" ]] && [[ ! $case3 == "" ]]
+						then
+					          _ex=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_hosts == "none" ]] || [[ $_ex == "none" ]]
+          	then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -hold -e $_dir -u $_hosts -e $_ex &
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Complete \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+
+fu_un_attack_4 ()
+	{
+		_user="none"
+    		_word="none"
+		_thread="none"
+		_prox="none"
+		_igs="tools/instabrute.py"
+		while /bin/true
+			do
+						echo -e $green"   |"
+						echo -e $green"   └["$BlueF"bruteforce/instagram/attack$green]:"
+						echo -e $green"    |"
+						echo -ne $green"    └─► " ; tput sgr0
+						read case1 case2 case3 case4
+			if [[ $case1 == "show" ]] && [[ $case2 == "help" ]]
+					then
+						echo -e "\t"$green"¦"
+						echo -e "\t"$green"¦––––"$red"►"$green" show info    "$red": "$white"show module info "
+						echo -e "\t"$green"¦––––"$red"►"$green" show options "$red": "$white"show module options"
+						echo -e "\t"$green"¦––––"$red"►"$green" run          "$red": "$white"Execute the module"
+						echo -e "\t"$green"¦––––"$red"►"$green" set          "$red": "$white"Set a value"
+						echo -e "\t"$green"¦––––"$red"►"$green" back         "$red": "$white"Back to main menu}"
+						echo -e "\t"$green"¦––––"$red"►"$green" clear        "$red": "$white"clear window "
+						echo -e "\t"$green"¦––––"$red"►"$green" exit         "$red": "$white"Exit \n\n"
+			elif [[ $case1 == "show" ]] && [[ $case2 == "options" ]]
+				then
+							echo
+							echo -e "\t "$white"options           example           value "
+							echo -e "\t "$red"-------           -------           -----"
+							echo ""
+							echo -e $green"\t username         "$cyan" screetsec         $_user"
+							echo -e $green"\t wordlist         "$cyan" pass.txt          $_word"
+							echo -e $green"\t proxy		  "$cyan" proxy.txt         $_prox"
+							echo -e $green"\t thread           "$cyan" 4                 $_thread"
+							echo
+			elif [[ $case1 == "show" ]] && [[ $case2 == "info" ]]
+					 then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦$red Information"
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Instagram Brute Forcer Developed By N3TC@T .  \n"
+					elif [[ $case1 == "set" ]]
+						then
+							if [[ $case2 == "username" ]] 	&& [[ ! $case3 == "" ]]
+						then
+						_user=$case3
+					elif [[ $case2 == "wordlist" ]] && [[ ! $case3 == "" ]]
+						then
+					          _word=$case3
+					elif [[ $case2 == "proxy" ]] && [[ ! $case3 == "" ]]
+						then
+					          _prox=$case3
+					elif [[ $case2 == "thread" ]] && [[ ! $case3 == "" ]]
+						then
+					          _thread=$case3
+					 		fi
+				 	elif [[ $case1 == "run" ]]
+						then
+							if [[ $_user == "none" ]] || [[ $_word == "none" ]] || [[ $_prox == "none" ]] || [[ $_thread == "none" ]]
+          						then
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––"$red"►"$red" please set values to requirements before run module"
+							else
+							xterm -T " Brutsploit " -bg black -fg white -fa monaco -fs 9 -geometry 110x16-0+0 -hold -e python $_igs -u $_user -w $_word -p $_prox -t $_thread -d -v &
+							sleep 1
+							echo -e "\t"$green"¦"
+							echo -e "\t"$green"¦––––$red► "$green" Complete \n"
+						  fi
+					elif [[ $case1 == "clear" ]] ; then
+										clear
+						elif [[ $case1 == "back" ]] || [[ $case1 == "exit" ]] ;
+							then
+										break
+							else
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦"
+								echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+					  		fi
+			done
+			}
+
+
+mainmenu () {
+	clear
+	f_un_ban
+		while /bin/true
+			do
+				echo -e $green"\n ┌─[Brutsploit]──[~]─["$BlueF"noob]:"
+				echo -ne $green" └─────► " ; tput sgr0
+				read idn1 idn2 idn3 idn4 idn5 idn6
+		if [[ $idn1 == "Help" ]] || [[ $idn1 == "help" ]]
+			then
+				fu_un_help
+		elif [[ $idn1 == "Banner" ]] || [[ $idn1 == "banner" ]]
+			then
+				fu_un_banner
+		elif [[ $idn1 == "show" ]] && [[ $idn2 == "modules" ]]
+			then
+				fu_un_module
+		elif [[ $idn1 == "list" ]] && [[ $idn2 == "0a" ]]
+			then
+			fu_un_list_transfrom #list
+		elif [[ $idn1 == "info" ]] && [[ $idn2 == "0a" ]]
+			then
+			fu_un_info_transform #info #start a module for transform
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a1" ]]
+			then
+				fu_un_transform_1
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a2" ]]
+			then
+				fu_un_transform_2
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a3" ]]
+			then
+				fu_un_transform_3
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a4" ]]
+			then
+				fu_un_transform_4
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a5" ]]
+				then
+				fu_un_transform_5
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a6" ]]
+				then
+				fu_un_transform_6
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0a7" ]]
+				then
+				fu_un_transform_7 #stop
+		elif [[ $idn1 == "info" ]] && [[ $idn2 == "0b" ]]
+				then
+					fu_un_info_combination
+		elif [[ $idn1 == "list" ]] && [[ $idn2 == "0b" ]]
+				then
+				fu_un_list_combination #start combintaion at here
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0b1" ]]
+				then
+				fu_un_combine_1
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0b2" ]]
+				then
+				fu_un_combine_2
+
+		elif [[ $idn1 == "info" ]] && [[ $idn2 == "0c" ]]
+				then
+					fu_un_info_permutation
+		elif [[ $idn1 == "list" ]] && [[ $idn2 == "0c" ]]
+				then
+					fu_un_list_permutation
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0c1" ]]
+				then
+					fu_un_permut_1
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0c2" ]]
+				then
+					fu_un_permut_2
+		elif [[ $idn1 == "info" ]] && [[ $idn2 == "0d" ]]
+				then
+					fu_un_info_setup
+	 	elif [[ $idn1 == "list" ]] && [[ $idn2 == "0d" ]]
+	 			then
+	    		fu_un_list_setup
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0d1" ]]
+				then
+					fu_un_setup_1
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0d2" ]]
+	   		then
+					fu_un_setup_2
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0d3" ]]
+	   		then
+					fu_un_setup_3
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0d4" ]]
+				then
+					fu_un_setup_4
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0d5" ]]
+				then
+					fu_un_setup_5
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0d6" ]]
+			then
+					fu_un_setup_6
+		elif [[ $idn1 == "info" ]] && [[ $idn2 == "0e" ]]
+			then
+					fu_un_info_attack
+		elif [[ $idn1 == "list" ]] && [[ $idn2 == "0e" ]]
+			then
+  					fu_un_list_attack
+		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0e1" ]]
+			then
+					fu_un_attack_1
+    		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0e2" ]]
+    			then
+    					fu_un_attack_2
+   		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0e3" ]]
+        		then
+          				fu_un_attack_3
+   		elif [[ $idn1 == "use" ]] && [[ $idn2 == "0e4" ]]
+        		then
+          				fu_un_attack_4
+		elif [[ $idn1 == "clear" ]] || [[ $idn1 == "Clear" ]]
+			then
+			clear && f_un_ban
+		elif [[ $idn1 == "Credits" ]] || [[ $idn1 == "credits" ]]
+			then
+			f_un_info_credits
+		elif [[ $idn1 == exit ]] || [[ $idn1 == Exit ]] || [[ $idn1 == quit ]]
+			then
+			fu_un_exit
+		else
+			echo -e "\t"$green"¦"
+			echo -e "\t"$green"¦"
+			echo -e "\t"$green"¦––––"$red"►   "$red" Wrong    "$red" : spesific your command \n "
+		fi
+	done
+}
+
+mainmenu
