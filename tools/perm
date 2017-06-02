@@ -1,0 +1,82 @@
+#!/bin/bash
+
+#This colour
+cyan='\e[0;36m'
+green='\e[1;32m'
+okegreen='\033[92m'
+lightgreen='\e[1;32m'
+white='\e[1;37m'
+red='\e[1;31m'
+yellow='\e[1;33m'
+BlueF='\e[1;34m'
+
+
+mainmenu(){
+  clear
+  echo -e $green"\n ┌─[Brutsploit]──[~]─["$BlueF"noob]:"
+  echo -ne $green" └─────► \n" ; tput sgr0
+  echo -e "\t"$green"¦"
+  echo -e "\t"$green"¦"
+  echo -ne "\t"$green"¦––––"$red"►   "$green" Located a file : " ; tput sgr0
+  read file
+  echo -e "\t"$green"¦"
+  echo -ne "\t"$green"¦––––"$red"►   "$green" name output a file : " ; tput sgr0
+  read _name
+  clear
+  sleep 1
+  echo -e $green" ----------------------------------------------------------------------------------------------------------"
+  echo -e $red" Simultaneous alterations"
+  echo -e $green" ----------------------------------------------------------------------------------------------------------"
+  echo -e $red" [1] "$green"@4  bB  cC  dD  33  fF  9G  hH  iI  jJ  kK  11  mM  nN  00  pP  qQ  rR  5\$  77  uU  vV  wW  xX  yY  zZ"
+  echo -e $red" [2] "$green"44  68  cC  dD  33  fF  9G  hH  iI  jJ  kK  11  mM  nN  00  pP  qQ  rR  55  77  uU  vV  wW  xX  yY  22"
+  echo -e $red" [3] "$green"@4  b8  cC  dD  33  fF  9G  hH  iI  jJ  kK  11  mM  nN  00  pP  qQ  rR  5\$  77  uU  vV  wW  xX  yY  22"
+  echo -e $red" [4] "$green"@@  bB  cC  dD  33  fF  gG  hH  iI  jJ  kK  11  mM  nN  00  pP  qQ  rR  \$\$  77  uU  vV  wW  xX  yY  zZ"
+  echo -e $red" [5] "$green"44  bB  cC  dD  33  fF  gG  hH  iI  jJ  kK  11  mM  nN  00  pP  qQ  rR  \$\$  77  uU  vV  wW  xX  yY  zZ"
+  echo -e $red" [6] "$green"44  bB  cC  dD  33  fF  gG  hH  iI  jJ  kK  11  mM  nN  00  pP  qQ  rR  55  77  uU  vV  wW  xX  yY  zZ\n"
+  echo -e $green"\n ┌─[Brutsploit]──[~]─["$BlueF"Choice]:"
+  echo -ne $green" └─────► " ; tput sgr0
+  read main
+          	case $main in
+          	1)
+            for i in $(cat $file) ; do
+            echo $i | sed -e 's/a/@/g' -e 's/A/4/g' -e 's/e/3/g' -e 's/E/3/g' -e 's/l/1/g' -e 's/L/1/g' -e 's/o/0/g' -e 's/O/0/g' -e 's/s/5/g' -e 's/S/\$/g' -e 's/t/7/g' -e 's/T/7/g' >> output/$_name
+            done
+            echo -e "\t"$green"¦"
+            echo -e "\t"$green"¦––––$red► "$green"permutation characters complete";;
+          	2)
+            for i in $(cat $file) ; do
+            echo $i | sed -e 's/a/4/g' -e 's/A/4/g' -e 's/b/6/g' -e 's/B/8/g' -e 's/e/3/g' -e 's/E/3/g' -e 's/g/9/g' -e 's/l/1/g' -e 's/L/1/g' -e 's/o/0/g' -e 's/O/0/g' -e 's/s/5/g' -e 's/S/5/g' -e 's/t/7/g' -e 's/T/7/g' -e 's/z/2/g' -e 's/Z/2/g' >> output/$_name
+            done
+            echo -e "\t"$green"¦"
+            echo -e "\t"$green"¦––––$red► "$green"permutation characters complete";;
+          	3)
+            for i in $(cat $file) ; do
+            echo $i | sed -e 's/a/@/g' -e 's/A/4/g' -e 's/B/8/g' -e 's/e/3/g' -e 's/E/3/g' -e 's/g/9/g' -e 's/l/1/g' -e 's/L/1/g' -e 's/o/0/g' -e 's/O/0/g' -e 's/s/5/g' -e 's/S/\$/g' -e 's/t/7/g' -e 's/T/7/g' -e 's/z/2/g' -e 's/Z/2/g' >> output/$_name
+            done
+            echo -e "\t"$green"¦"
+            echo -e "\t"$green"¦––––$red► "$green"permutation characters complete";;
+          	4)
+            for i in $(cat $file) ; do
+            echo $i | sed -e 's/a/@/g' -e 's/A/@/g' -e 's/e/3/g' -e 's/E/3/g' -e 's/l/1/g' -e 's/L/1/g' -e 's/o/0/g' -e 's/O/0/g' -e 's/s/\$/g' -e 's/S/\$/g' -e 's/t/7/g' -e 's/T/7/g' >> output/$_name
+            done
+            echo -e "\t"$green"¦"
+            echo -e "\t"$green"¦––––$red► "$green"permutation characters complete";;
+          	5)
+            for i in $(cat $file) ; do
+            echo $i | sed -e 's/a/4/g' -e 's/A/4/g' -e 's/e/3/g' -e 's/E/3/g' -e 's/l/1/g' -e 's/L/1/g' -e 's/o/0/g' -e 's/O/0/g' -e 's/s/\$/g' -e 's/S/\$/g' -e 's/t/7/g' -e 's/T/7/g' >> ouput/$_name
+            done
+            echo -e "\t"$green"¦"
+            echo -e "\t"$green"¦––––$red► "$green"permutation characters complete";;
+          	6)
+            for i in $(cat $file) ; do
+            echo $i | sed -e 's/a/4/g' -e 's/A/4/g' -e 's/e/3/g' -e 's/E/3/g' -e 's/l/1/g' -e 's/L/1/g' -e 's/o/0/g' -e 's/O/0/g' -e 's/s/5/g' -e 's/S/5/g' -e 's/t/7/g' -e 's/T/7/g' >> output/$_name
+            done
+            echo -e "\t"$green"¦"
+            echo -e "\t"$green"¦––––$red► "$green"permutation characters complete";;
+          	Q|q) exit ;;
+          	*) mainmenu ;;
+          	esac
+          }
+
+
+mainmenu

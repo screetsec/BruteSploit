@@ -1,0 +1,372 @@
+\" Copyright
+\"
+\" Copyright (C) 2009-2013 bofh28 <bofh28@gmail.com>
+\"
+\" License
+\"
+\" This file is part of Crunch.
+\"
+\" This file is free software; you can redistribute it and/or modify
+\" it under the terms of the GNU General Public License as published by
+\" the Free Software Foundation, version 2 only of the License.
+\"
+\" This program is distributed in the hope that it will be useful,
+\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+\" GNU General Public License for more details.
+\"
+\" You should have received a copy of the GNU General Public License
+\" along with Crunch.  If not, see <http://www.gnu.org/licenses/>.
+
+.TH CRUNCH "1" "May 2014" "Version 3.6"
+.SH NAME
+crunch \- generate wordlists from a character set
+.SH SYNOPSIS
+crunch <min-len> <max-len> [<charset string>] [options]
+.SH DESCRIPTION
+Crunch can create a wordlist based on criteria you specify.  The outout from crunch can be sent to the screen, file, or to another program.  The required parameters are:
+.HP
+min-len
+.br
+The minimum length string you want crunch to start at.  This option is required even for parameters that won't use the value.
+.HP
+max-len
+.br
+The maximum length string you want crunch to end at.  This option is required even for parameters that won't use the value.
+.HP
+charset string
+.br
+You may specify character sets for crunch to use on the command line or if you leave it blank crunch will use the default character sets.  The order MUST BE lower case characters, upper case characters, numbers, and then symbols.  If you don't follow this order you will not get the results you want.  You MUST specify either values for the character type or a plus sign.  NOTE: If you want to include the space character in your character set you must escape it using the \\ character or enclose your character set in quotes i.e. "abc ".  See the examples 3, 11, 12, and 13 for examples.
+.PP
+.SH OPTIONS
+.HP
+\-b number[type]
+.br
+Specifies the size of the output file, only works if \-o START is used, i.e.: 60MB  The output files will be in the format of starting letter-ending letter for example: ./crunch 4 5 \-b 20mib \-o START will generate 4 files: aaaa-gvfed.txt, gvfee-ombqy.txt, ombqz-wcydt.txt, wcydu-zzzzz.txt valid values for type are kb, mb, gb, kib, mib, and gib.  The first three types are based on 1000 while the last three types are based on 1024.  NOTE There is no space between the number and type.  For example 500mb is correct 500 mb is NOT correct. 
+.HP
+\-c number
+.br
+Specifies the number of lines to write to output file, only works if \-o START is used, i.e.: 60  The output files will be in the format of starting letter-ending letter for example: ./crunch 1 1 \-f /pentest/password/crunch/charset.lst mixalpha-numeric-all-space \-o START \-c 60 will result in 2 files: a-7.txt and 8-\\ .txt  The reason for the slash in  the second filename is the ending character is space and ls has to escape it to print it.  Yes you will need to put in the \\ when specifying the filename because the last character is a space. 
+.HP
+\-d numbersymbol
+.br
+Limits the number of duplicate characters.  \-d 2@ limits the lower case alphabet to output like aab and aac.  aaa would not be generated as that is 3 consecutive letters of a.  The format is number then symbol where number is the maximum number of consecutive characters and symbol is the symbol of the the character set you want to limit i.e. @,%^   See examples 17-19.
+.HP
+\-e string
+.br
+Specifies when crunch should stop early
+.HP
+\-f /path/to/charset.lst charset-name
+.br
+Specifies a character set from the charset.lst
+.HP
+\-i Inverts the output so instead of aaa,aab,aac,aad, etc you get aaa,baa,caa,daa,aba,bba, etc
+.HP
+\-l When you use the \-t option this option tells crunch which symbols should be treated as literals.  This will allow you to use the placeholders as letters in the pattern.  The \-l option should be the same length as the \-t option.  See example 15.
+.HP
+\-m Merged with \-p.  Please use \-p instead.
+.HP
+\-o wordlist.txt
+.br
+Specifies the file to write the output to, eg: wordlist.txt
+.HP
+\-p charset OR \-p word1 word2 ...
+.br
+Tells crunch to generate words that don't have repeating characters.  By default crunch will generate a wordlist size of #of_chars_in_charset ^ max_length.  This option will instead generate #of_chars_in_charset!.  The ! stands for factorial.  For example say the charset is abc and max length is 4..  Crunch will by default generate 3^4 = 81 words.  This option will instead generate 3! = 3x2x1 = 6 words (abc, acb, bac, bca, cab, cba).  THIS MUST BE THE LAST OPTION!  This option CANNOT be used with -s and it ignores min and max length however you must still specify two numbers.
+.HP
+\-q filename.txt
+.br
+Tells crunch to read filename.txt and permute what is read.  This is like the \-p option except it gets the input from filename.txt.
+.HP
+\-r Tells crunch to resume generate words from where it left off.  \-r only works if you use \-o.  You must use the same command as the original command used to generate the words.  The only exception to this is the \-s option.  If your original command used the \-s option you MUST remove it before you resume the session.  Just add \-r to the end of the original command.
+.HP
+\-s startblock
+.br
+Specifies a starting string, eg: 03god22fs
+.HP
+\-t @,%^
+.br
+Specifies a pattern, eg: @@god@@@@ where the only the @'s, ,'s, %'s, and ^'s will change.
+.br
+@ will insert lower case characters
+.br
+, will insert upper case characters
+.br
+% will insert numbers
+.br
+^ will insert symbols
+.HP
+\-u
+.br
+The \-u option disables the printpercentage thread.  This should be the last option.
+.HP
+\-z gzip, bzip2, lzma, and 7z
+.br
+Compresses the output from the \-o option.  Valid parameters are gzip, bzip2, lzma, and 7z.
+.br
+gzip is the fastest but the compression is minimal.  bzip2 is a little slower than gzip but has better compression.  7z is slowest but has the best compression.
+.PP
+.SH EXAMPLES
+Example 1
+.br
+crunch 1 8
+.br
+crunch will display a wordlist that starts at a and ends at zzzzzzzz
+.PP
+Example 2
+.br
+crunch 1 6 abcdefg
+.br
+crunch will display a wordlist using the character set abcdefg that starts at a and ends at gggggg
+.PP
+Example 3
+.br
+crunch 1 6 abcdefg\\ 
+.br
+there is a space at the end of the character string.  In order for crunch to use the space you will need to escape it using the \\ character.  In this example you could also put quotes around the letters and not need the \\, i.e. "abcdefg ".  Crunch will display a wordlist using the character set abcdefg  that starts at a and ends at (6 spaces)
+.PP
+Example 4
+.br
+crunch 1 8 \-f charset.lst mixalpha-numeric-all-space \-o wordlist.txt
+.br
+crunch will use the mixalpha-numeric-all-space character set from charset.lst and will write the wordlist to a file named wordlist.txt.  The file will start with a and end with "        "
+.PP
+Example 5
+.br
+crunch 8 8 \-f charset.lst mixalpha-numeric-all-space \-o wordlist.txt \-t @@dog@@@ \-s cbdogaaa
+.br
+crunch should generate a 8 character wordlist using the mixalpha-number-all-space character set from charset.lst and will write the wordlist to a file named wordlist.txt.  The file will start at cbdogaaa and end at "  dog   " 
+.PP
+Example 6
+.br
+crunch 2 3 \-f charset.lst ualpha \-s BB
+.br
+crunch with start generating a wordlist at BB and end with ZZZ.  This is useful if you have to stop generating a wordlist in the middle.  Just do a tail wordlist.txt and set the \-s parameter to the next word in the sequence.  Be sure to rename the original wordlist BEFORE you begin as crunch will overwrite the existing wordlist.
+.PP
+Example 7
+.br
+crunch 4 5 \-p abc
+.br
+The numbers aren't processed but are needed.
+.br
+crunch will generate abc, acb, bac, bca, cab, cba.
+.PP
+Example 8
+.br
+crunch 4 5 \-p dog cat bird
+.br
+The numbers aren't processed but are needed.
+.br
+crunch will generate birdcatdog, birddogcat, catbirddog, catdogbird, dogbirdcat, dogcatbird.
+.PP
+Example 9
+.br
+crunch 1 5 \-o START \-c 6000 \-z bzip2
+.br
+crunch will generate bzip2 compressed files with each file containing 6000 words.  The filenames of the compressed files will be first_word-last_word.txt.bz2
+.PP
+# time ./crunch 1 4 \-o START \-c 6000 \-z gzip
+.br
+real    0m2.729s
+.br
+user    0m2.216s
+.br
+sys     0m0.360s
+.PP
+# time ./crunch 1 4 \-o START \-c 6000 \-z bzip2
+.br
+real    0m3.414s
+.br
+user    0m2.620s
+.br
+sys     0m0.580s
+.PP
+# time ./crunch 1 4 \-o START \-c 6000 \-z lzma
+.br
+real    0m43.060s
+.br
+user    0m9.965s
+.br
+sys     0m32.634s
+.PP
+size  filename
+.br
+30K   aaaa-aiwt.txt
+.br
+12K   aaaa-aiwt.txt.gz
+.br
+3.8K  aaaa-aiwt.txt.bz2
+.br
+1.1K  aaaa-aiwt.txt.lzma
+.PP
+Example 10
+.br
+crunch 4 5 \-b 20mib \-o START
+.br
+will generate 4 files: aaaa-gvfed.txt, gvfee-ombqy.txt, ombqz-wcydt.txt, wcydu-zzzzz.txt
+.br
+the first three files are 20MBs (real power of 2 MegaBytes) and the last file is 11MB.
+.PP
+Example 11
+.br
+crunch 3 3 abc + 123 !@# \-t @%^
+.br
+will generate a 3 character long word with a character as the first character, and number as the second character, and a symbol for the third character.  The order in which you specify the characters you want is important.  You must specify the order as lower case character, upper case character, number, and symbol.  If you aren't going to use a particular character set you use a plus sign as a placeholder.  As you can see I am not using the upper case character set so I am using the plus sign placeholder.  The above will start at a1! and end at c3#
+.PP
+Example 12
+.br
+crunch 3 3 abc + 123 !@# \-t ^%@
+.br	
+will generate 3 character words starting with !1a and ending with #3c
+.PP
+Example 13
+.br
+crunch 4 4  + + 123 + \-t %%@^
+.br
+the plus sign (+) is a place holder so you can specify a character set for the character type.  crunch will use the default character set for the character type when crunch encounters a + (plus sign) on the command line.  You must either specify values for each character type or use the plus sign.  I.E. if you have two characters types you MUST either specify values for each type or use a plus sign.  So in this example the character sets will be:
+.br
+abcdefghijklmnopqrstuvwxyz
+.br
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+.br
+123
+.br
+!@#$%^&*()-_+=~`[]{}|\\:;"'<>,.?/ 
+.br
+there is a space at the end of the above string
+.br
+the output will start at 11a! and end at "33z ".  The quotes show the space at the end of the string.
+.PP
+Example 14
+.br
+crunch 5 5 \-t ddd@@ \-o j \-p dog cat bird
+.br
+any character other than one of the following: @,%^
+.br
+is the placeholder for the words to permute.  The @,%^ symbols have the same function as \-t.
+.br
+If you want to use @,%^ in your output you can use the \-l option to specify which character you want crunch to treat as a literal.
+.br
+So the results are
+.br
+birdcatdogaa
+.br
+birdcatdogab
+.br
+birdcatdogac
+.br
+<skipped>
+.br
+dogcatbirdzy
+.br
+dogcatbirdzz
+.PP
+Example 15
+.br
+crunch 7 7 \-t p@ss,%^ \-l a@aaaaa
+.br
+crunch will now treat the @ symbol as a literal character and not replace the character with a uppercase letter.
+.br
+this will generate
+.br
+p@ssA0!
+.br
+p@ssA0@
+.br
+p@ssA0#
+.br
+p@ssA0$
+.br
+<skipped>
+.br
+p@ssZ9
+.PP
+Example 16
+.br
+crunch 5 5 \-s @4#S2 \-t @%^,2 \-e @8\ Q2 \-l @dddd \-b 10KB \-o START
+.br
+crunch will generate 5 character strings starting with @4#S2 and ending at @8 Q2.  The output will be broken into 10KB sized files named for the files starting and ending strings.
+.PP
+Example 17
+.br
+crunch 5 5 \-d 2@ \-t @@@%%
+.br
+crunch will generate 5 character strings staring with aab00 and ending at zzy99.  Notice that aaa and zzz are not present.
+.PP
+Example 18
+.br
+crunch 10 10 \-t @@@^%%%%^^ \-d 2@ \-d 3% \-b 20mb \-o START
+.br
+crunch will generate 10 character strings starting with aab!0001!! and ending at zzy 9998    The output will be written to 20mb files.
+.PP
+Example 19
+.br
+crunch 8 8 \-d 2@
+.br
+crunch will gernerate 8 characters that limit the same number of lower case characters to 2.  Crunch will start at aabaabaa and end at zzyzzyzz.
+.PP
+Example 20
+.br
+crunch 4 4 \-f unicode_test.lst japanese \-t @@%% \-l @xdd
+.br
+crunch will load some japanese characters from the unicode_test character set file.  The output will start at @日00 and end at @語99.
+.SH REDIRECTION
+.PP
+You can use crunch's output and pipe it into other programs.  The two most popular programs to pipe crunch into are: aircrack-ng and airolib-ng.  The syntax is as follows:
+.br
+crunch 2 4 abcdefghijklmnopqrstuvwxyz | aircrack-ng /root/Mycapfile.cap \-e MyESSID \-w-
+.br
+crunch 10 10 12345 \-\-stdout | airolib-ng testdb \-import passwd \-
+.SH NOTES
+1. Starting in version 2.6 crunch will display how much data is about to be generated.  In 2.7 it will also display how many lines will be generated.  Crunch will now wait 3 seconds BEFORE it begins generating data to give you time to press Ctrl-C to abort crunch if you find the values are too large for your application.
+.PP
+2. I have added hex-lower (0123456789abcdef) and hex-upper (0123456789ABCDEF) to charset.lst.
+.PP
+3. Several people have requested that I add support for the space character to crunch.  crunch has always supported the space character on the command line and in the charset.lst.  To add a space on the command line you must escape it using the / character.  See example 3 for the syntax.  You may need to escape other characters like ! or # depending on your operating system.
+.PP
+4. Starting in 2.7 if you are generating a file then every 10 seconds you will
+receive the % done.
+.PP
+5. Starting in 3.0 I had to change the \-t * character to a , as the * is a reserved character.  You could still use it if you put a \\ in front of the *.  Yes it breaks crunch's syntax and I do my best to avoid doing that, but in this instance it is easier to make the change for long term support. 
+.PP
+6. Some output is missing.  A file didn't get generated.
+.br
+The mostly explaination is you ran out of disk space.  If you have verified you have plenty of disk space then the problem is most likely the filename begins with a period.  In Linux filenames that begin with a period are hidden.  To view them do a ls \-l .*
+.PP
+7. Crunch says The maximum and minimum length should be the same size as the pattern you specified, however the length is set correctly.
+.br
+This usually means your pattern contains a character that needs to be escaped. In bash you need to escape the followings: &, *, space, \\, (, ), |, ', ", ;, <, >.
+.br
+The escape character in bash is a \\.  So a pattern that has a & and a * in it would look like this:
+.br
+crunch 4 4 \-t \\&\\*d@
+.br
+An alternative to escaping characters is to wrap your string with quotes.  For example:
+.br
+crunch 4 4 \-t "&*d@"
+.br
+If you want to use the " in your pattern you will need to escape it like this: crunch 4 4 \-t "&*\\"@"
+.br
+Please note that different terminals have different escape characters and probably have different characters that will need escaping.  Please check the manpage of your terminal for the escape characters and characters that need escaping.
+.PP
+8. When using the \-z 7z option, 7z does not delete the original file.  You will have to delete those files by hand.
+.SH AUTHOR
+This manual page was written by bofh28@gmail.com
+.PP
+Crunch version 1.0 was written by mimayin@aciiid.ath.cx
+.br
+all later versions of crunch have been updated by bofh28@gmail.com
+.SH FILES
+None.
+.SH BUGS
+If you find any please email bofh28 <bofh28@gmail.com> or post to http://www.backtrack-linux.org
+.SH COPYRIGHT
+Copyright (c) 2009-2013 bofh28 <bofh28@gmail.com>
+.PP
+This file is a part of Crunch.
+.PP
+Crunch is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2 only of the License.
+.PP
+Crunch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+.PP
+You should have received a copy of the GNU General Public License along with Crunch.  If not, see <http://www.gnu.org/licenses/>.
