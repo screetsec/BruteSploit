@@ -1,6 +1,6 @@
-# Brutsploit
+# Brutesploit
 
-[![Version](https://img.shields.io/badge/Brutsploit-1.1.0-brightgreen.svg?maxAge=259200)]()
+[![Version](https://img.shields.io/badge/Brutesploit-1.1.0-brightgreen.svg?maxAge=259200)]()
 [![Version](https://img.shields.io/badge/Codename-Pretty-red.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
@@ -30,10 +30,10 @@ Be sure to check out the [Changelog] and Read CHANGELOG.md
 
 
 ## Getting Started
-1. ```git clone https://github.com/Screetsec/Brutsploit.git```
-2. ```cd Brutsploit```
-3. ```chmod +x Brutsploit ```
-3. ```sudo ./Brutsploit or sudo su ./Brutsploit ```
+1. ```git clone https://github.com/Screetsec/Brutesploit.git```
+2. ```cd Brutesploit```
+3. ```chmod +x Brutesploit ```
+3. ```sudo ./Brutesploit or sudo su ./Brutesploit ```
 
  
 
