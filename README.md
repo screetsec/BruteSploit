@@ -2,9 +2,14 @@
 
 
 BruteSploit is a collection of method for automated Generate, Bruteforce and Manipulation wordlist with interactive shell.
-That can be used during a penetration test to enumerate and can be used in CTF for manipulation,combine,transform and permutation some words or file text :p   
+That can be used during a penetration test to enumerate and can be used in CTF for manipulation,combine,transform and permutation some words or file text :p 
 
-<img src="https://cloud.githubusercontent.com/assets/17976841/26713324/3851afa0-4796-11e7-8c9c-198df216f638.png" ></img> 
+[![Version](https://img.shields.io/badge/Brutsploit-1.1.0-brightgreen.svg?maxAge=259200)]()
+[![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
+[![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
+
+
+<img src="https://cloud.githubusercontent.com/assets/17976841/26713523/583b95aa-4797-11e7-93a5-d67a66726e5c.png" ></img> 
 
 
 ### Features 
@@ -53,13 +58,14 @@ thefatrat , Backdoor Creator ( bypass av ) : https://github.com/Screetsec/TheFat
 ## :octocat: Credits
 
 - Thanks to allah and Screetsec [ Edo -maland- ] <Me> 
-- Dracos Linux from Scratch Indonesia ( Awesome Penetration os ), you can see in http://dracos-linux.org/ 
-- Offensive Security for the awesome OS ( http://www.offensive-security.com/ )
-- http://www.kali.org/"   
-- Jack Wilder admin in http://www.linuxsec.org
-- And another open sources tool in github
-- Uptodate new tools hacking visit http://www.kitploit.com
-- Contribute Boy Suganda Sinaga [ dragz17 ] 
+- Dracos Linux ( www.dracos-linux.org )  
+- Backbox indonesia ( www.www.backboxindonesia.or.id )  
+- Offensive Security for the awesome OS
+- Kali Linux ( http://www.kali.org/ )  
+- http://www.kitploit.com/
+- Big Thanks to : http://www.github.com/ 
+
+
 
 
 
