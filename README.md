@@ -21,7 +21,7 @@ That can be used during a penetration test to enumerate and can be used in CTF f
 
 ### Features & Tutorial
 - https://www.youtube.com/watch?v=x51As2OS2z4 
-- Channgel : https://www.youtube.com/screetsec
+- Channel : https://www.youtube.com/screetsec
 
 Check in this video : 
 
