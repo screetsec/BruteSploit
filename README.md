@@ -6,7 +6,7 @@
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 
 BruteSploit is a collection of method for automated Generate, Bruteforce and Manipulation wordlist with interactive shell.
-That can be used during a penetration test to enumerate and can be used in CTF for manipulation,combine,transform and permutation some words or file text :p 
+That can be used during a penetration test to enumerate and can be used in CTF for manipulation,combine,transform and permutation some words or file text :p i wrote this just for fun and learn how create interactive shell  is work
 
 
 
