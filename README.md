@@ -4,6 +4,13 @@
 BruteSploit is a collection of method for automated Generate, Bruteforce and Manipulation wordlist with interactive shell.
 That can be used during a penetration test to enumerate and can be used in CTF for manipulation,combine,transform and permutation some words or file text :p   
 
+<img src="https://cloud.githubusercontent.com/assets/17976841/26713324/3851afa0-4796-11e7-8c9c-198df216f638.png" ></img> 
+
+
+### Features 
+
+Check in this video 
+
 ### Donate
 - If this project very help you to penetration testing  and u want support me , you can give me a cup of coffee :)
 - [![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/id/address/1NuNTXo7Aato7XguFkvwYnTAFV2immXmjS)
