@@ -18,9 +18,9 @@ That can be used during a penetration test to enumerate and can be used in CTF f
 
 
 
-### Features 
+### Features & Tutorial
 
-Check in this video 
+Check in this video : 
 
 ## :scroll: Changelog
 Be sure to check out the [Changelog] and Read CHANGELOG.md
@@ -32,16 +32,15 @@ Be sure to check out the [Changelog] and Read CHANGELOG.md
 3. ```chmod +x Brutsploit ```
 3. ```sudo ./Brutsploit or sudo su ./Brutsploit ```
 
-##  :heavy_exclamation_mark: Requirements
+ 
 
-- A linux operating system. We recommend Kali Linux 2 or Kali 2016.1 rolling / Cyborg / Parrot / Dracos / BackTrack / Backbox / and another operating system ( linux ) 
+## A linux operating system. We recommend :
+- Kali Linux 2 or Kali 2016.1 rolling 
+- Cyborg
+- Parrot 
+- BackTrack 
+- Backbox  
 
-
-## Tutorial ?  or another tool ? 
-
-you can visit my channel  : https://www.youtube.com/channel/UCpK9IXzLMfVFp9NUfDzxFfw
-
-thefatrat , Backdoor Creator ( bypass av ) : https://github.com/Screetsec/TheFatRat
 
 ## BUG ? 
 - Please Submit new issue 
